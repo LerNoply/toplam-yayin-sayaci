@@ -1,13 +1,69 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Yayın Süresi</title>
-  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Yayın Sayacı Overlay</title>
+  <style>
+    body {
+      margin: 0;
+      background: transparent;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      color: #00ff00;
+      font-weight: bold;
+      font-size: 48px;
+      text-shadow: 0 0 5px #00ff00;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      user-select: none;
+    }
+  </style>
 </head>
 <body>
-  <div id="counter">00:00:00</div>
-  <script src="script.js"></script>
+  <div id="countdown">00:00:00</div>
+
+  <script>
+    function getSavedStartDate() {
+      return localStorage.getItem('startDate');
+    }
+
+    function parseDate(dateStr) {
+      // dateStr = "yyyy-mm-ddThh:mm" gibi
+      return new Date(dateStr);
+    }
+
+    function formatTime(ms) {
+      let totalSeconds = Math.floor(ms / 1000);
+      let hours = Math.floor(totalSeconds / 3600);
+      let minutes = Math.floor((totalSeconds % 3600) / 60);
+      let seconds = totalSeconds % 60;
+      return (
+        String(hours).padStart(2, '0') + ':' +
+        String(minutes).padStart(2, '0') + ':' +
+        String(seconds).padStart(2, '0')
+      );
+    }
+
+    function updateTimer() {
+      const startDateStr = localStorage.getItem('startDate');
+      if (!startDateStr) {
+        document.getElementById('countdown').textContent = 'Başlangıç tarihi yok';
+        return;
+      }
+      const startDate = parseDate(startDateStr);
+      const now = new Date();
+      const diff = now - startDate;
+      if (diff < 0) {
+        document.getElementById('countdown').textContent = 'Yayın başlamadı';
+        return;
+      }
+      document.getElementById('countdown').textContent = formatTime(diff);
+    }
+
+    setInterval(updateTimer, 1000);
+    updateTimer();
+  </script>
 </body>
 </html>
