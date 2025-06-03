@@ -1,53 +1,62 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>OBS Yayın Sayacı</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Yayın Süresi</title>
   <style>
     body {
       margin: 0;
-      padding: 0;
-      background: transparent;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: transparent;
       display: flex;
       justify-content: center;
       align-items: center;
       height: 100vh;
     }
 
-    #counter {
-      font-size: 3rem;
+    #timer-box {
+      background-color: rgba(0, 0, 0, 0.5);
+      padding: 20px 40px;
+      border-radius: 12px;
       color: white;
-      text-shadow: 2px 2px 4px rgba(0,0,0,0.6);
+      font-size: 2rem;
+      font-weight: bold;
+      box-shadow: 0 0 10px rgba(0,0,0,0.5);
     }
   </style>
 </head>
 <body>
-  <div id="counter">Yükleniyor...</div>
+  <div id="timer-box">
+    Yayın süresi: <span id="timer">--:--:--</span>
+  </div>
 
   <script>
-    function getStartTimeFromURL() {
-      const params = new URLSearchParams(window.location.search);
-      const startTime = params.get("start");
-      return startTime ? new Date(startTime) : null;
-    }
-
-    function updateCounter(startTime) {
+    function updateTimer(startTime) {
       const now = new Date();
-      const diff = new Date(now - startTime);
-      const hours = String(diff.getUTCHours()).padStart(2, '0');
-      const minutes = String(diff.getUTCMinutes()).padStart(2, '0');
-      const seconds = String(diff.getUTCSeconds()).padStart(2, '0');
-      document.getElementById("counter").textContent = `${hours}:${minutes}:${seconds}`;
+      const diff = Math.floor((now - startTime) / 1000);
+
+      const hours = String(Math.floor(diff / 3600)).padStart(2, '0');
+      const minutes = String(Math.floor((diff % 3600) / 60)).padStart(2, '0');
+      const seconds = String(diff % 60).padStart(2, '0');
+
+      document.getElementById('timer').textContent = `${hours}:${minutes}:${seconds}`;
     }
 
-    const startTime = getStartTimeFromURL();
+    function getStartTime() {
+      const params = new URLSearchParams(window.location.search);
+      const startParam = params.get('start');
+      if (!startParam) {
+        document.getElementById('timer').textContent = "Başlangıç zamanı yok!";
+        return null;
+      }
+      return new Date(startParam);
+    }
 
+    const startTime = getStartTime();
     if (startTime) {
-      setInterval(() => updateCounter(startTime), 1000);
-    } else {
-      document.getElementById("counter").textContent = "Başlangıç tarihi eksik.";
+      updateTimer(startTime);
+      setInterval(() => updateTimer(startTime), 1000);
     }
   </script>
 </body>
