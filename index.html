@@ -1,21 +1,73 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-  <meta charset="UTF-8">
-  <title>Tarih Seç</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Yayın Sayacı</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #121212;
+      color: #eee;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+    }
+    h1 {
+      margin-bottom: 1rem;
+    }
+    input, button {
+      padding: 0.5rem 1rem;
+      font-size: 1rem;
+      margin: 0.3rem;
+      border-radius: 5px;
+      border: none;
+    }
+    input[type="datetime-local"] {
+      background: #222;
+      color: #eee;
+    }
+    button {
+      background-color: #28a745;
+      color: white;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    button:hover {
+      background-color: #218838;
+    }
+  </style>
 </head>
 <body>
-  <h2>Yayın Başlangıç Tarihi/Saati Seç</h2>
-  <input type="datetime-local" id="startTime">
-  <button onclick="saveStartTime()">Kaydet</button>
+  <h1>Yayın Başlangıç Tarihi ve Saati</h1>
+  <input type="datetime-local" id="startDate" />
+  <button id="saveBtn">Kaydet</button>
+  <p><i>Yayın başlama zamanı seçin ve kaydedin.</i></p>
 
   <script>
-    function saveStartTime() {
-      const val = document.getElementById("startTime").value;
-      if (!val) return alert("Tarih seçmelisin!");
-      localStorage.setItem("streamStart", new Date(val).toISOString());
-      alert("Başlangıç zamanı kaydedildi!");
-    }
+    const saveBtn = document.getElementById('saveBtn');
+    const startDateInput = document.getElementById('startDate');
+
+    // Önceden seçilen tarihi yerelStorage'dan yükle
+    window.onload = () => {
+      const saved = localStorage.getItem('startDate');
+      if (saved) {
+        startDateInput.value = saved;
+      }
+    };
+
+    // Kaydet butonuna basınca tarihi kaydet
+    saveBtn.addEventListener('click', () => {
+      if (startDateInput.value) {
+        localStorage.setItem('startDate', startDateInput.value);
+        alert('Başlangıç tarihi kaydedildi!');
+      } else {
+        alert('Lütfen geçerli bir tarih seçin!');
+      }
+    });
   </script>
 </body>
 </html>
