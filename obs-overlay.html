@@ -1,53 +1,33 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Yayın Sayacı Overlay</title>
-  <style>
-    body {
-      margin: 0;
-      background: transparent;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      color: #00ff00;
-      font-weight: bold;
-      font-size: 48px;
-      text-shadow: 0 0 5px #00ff00;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-      user-select: none;
-    }
-  </style>
+  <meta charset="UTF-8">
+  <title>Yayın Süresi</title>
+  <link rel="stylesheet" href="style-overlay.css">
 </head>
 <body>
-  <div id="countdown">00:00:00</div>
+  <div id="countdown">Yükleniyor...</div>
 
   <script>
-    function getSavedStartDate() {
-      return localStorage.getItem('startDate');
+    function getStartDateFromURL() {
+      const params = new URLSearchParams(window.location.search);
+      return params.get('start');
     }
 
-    function parseDate(dateStr) {
-      // dateStr = "yyyy-mm-ddThh:mm" gibi
-      return new Date(dateStr);
+    function parseDate(str) {
+      return new Date(str);
     }
 
     function formatTime(ms) {
-      let totalSeconds = Math.floor(ms / 1000);
-      let hours = Math.floor(totalSeconds / 3600);
-      let minutes = Math.floor((totalSeconds % 3600) / 60);
-      let seconds = totalSeconds % 60;
-      return (
-        String(hours).padStart(2, '0') + ':' +
-        String(minutes).padStart(2, '0') + ':' +
-        String(seconds).padStart(2, '0')
-      );
+      const totalSeconds = Math.floor(ms / 1000);
+      const hours = String(Math.floor(totalSeconds / 3600)).padStart(2, '0');
+      const minutes = String(Math.floor((totalSeconds % 3600) / 60)).padStart(2, '0');
+      const seconds = String(totalSeconds % 60).padStart(2, '0');
+      return `${hours}:${minutes}:${seconds}`;
     }
 
     function updateTimer() {
-      const startDateStr = localStorage.getItem('startDate');
+      const startDateStr = getStartDateFromURL();
       if (!startDateStr) {
         document.getElementById('countdown').textContent = 'Başlangıç tarihi yok';
         return;
@@ -67,3 +47,23 @@
   </script>
 </body>
 </html>
+
+<style>  
+body {
+  margin: 0;
+  padding: 0;
+  background: transparent;
+}
+#countdown {
+  font-size: 2.5rem;
+  color: white;
+  text-align: center;
+  font-family: monospace;
+  padding: 10px;
+  background-color: rgba(0, 0, 0, 0.5);
+  border-radius: 10px;
+  width: fit-content;
+  margin: 20px auto;
+}
+</style>
+
