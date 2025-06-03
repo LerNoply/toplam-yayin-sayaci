@@ -1,69 +1,54 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-  <meta charset="UTF-8">
-  <title>Yayın Süresi</title>
-  <link rel="stylesheet" href="style-overlay.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>OBS Yayın Sayacı</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: transparent;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    #counter {
+      font-size: 3rem;
+      color: white;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.6);
+    }
+  </style>
 </head>
 <body>
-  <div id="countdown">Yükleniyor...</div>
+  <div id="counter">Yükleniyor...</div>
 
   <script>
-    function getStartDateFromURL() {
+    function getStartTimeFromURL() {
       const params = new URLSearchParams(window.location.search);
-      return params.get('start');
+      const startTime = params.get("start");
+      return startTime ? new Date(startTime) : null;
     }
 
-    function parseDate(str) {
-      return new Date(str);
-    }
-
-    function formatTime(ms) {
-      const totalSeconds = Math.floor(ms / 1000);
-      const hours = String(Math.floor(totalSeconds / 3600)).padStart(2, '0');
-      const minutes = String(Math.floor((totalSeconds % 3600) / 60)).padStart(2, '0');
-      const seconds = String(totalSeconds % 60).padStart(2, '0');
-      return `${hours}:${minutes}:${seconds}`;
-    }
-
-    function updateTimer() {
-      const startDateStr = getStartDateFromURL();
-      if (!startDateStr) {
-        document.getElementById('countdown').textContent = 'Başlangıç tarihi yok';
-        return;
-      }
-      const startDate = parseDate(startDateStr);
+    function updateCounter(startTime) {
       const now = new Date();
-      const diff = now - startDate;
-      if (diff < 0) {
-        document.getElementById('countdown').textContent = 'Yayın başlamadı';
-        return;
-      }
-      document.getElementById('countdown').textContent = formatTime(diff);
+      const diff = new Date(now - startTime);
+      const hours = String(diff.getUTCHours()).padStart(2, '0');
+      const minutes = String(diff.getUTCMinutes()).padStart(2, '0');
+      const seconds = String(diff.getUTCSeconds()).padStart(2, '0');
+      document.getElementById("counter").textContent = `${hours}:${minutes}:${seconds}`;
     }
 
-    setInterval(updateTimer, 1000);
-    updateTimer();
+    const startTime = getStartTimeFromURL();
+
+    if (startTime) {
+      setInterval(() => updateCounter(startTime), 1000);
+    } else {
+      document.getElementById("counter").textContent = "Başlangıç tarihi eksik.";
+    }
   </script>
 </body>
 </html>
-
-<style>  
-body {
-  margin: 0;
-  padding: 0;
-  background: transparent;
-}
-#countdown {
-  font-size: 2.5rem;
-  color: white;
-  text-align: center;
-  font-family: monospace;
-  padding: 10px;
-  background-color: rgba(0, 0, 0, 0.5);
-  border-radius: 10px;
-  width: fit-content;
-  margin: 20px auto;
-}
-</style>
-
