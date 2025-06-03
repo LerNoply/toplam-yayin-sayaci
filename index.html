@@ -1,26 +1,21 @@
 <!DOCTYPE html>
 <html lang="tr">
-
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Toplam Yayın Süresi</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8">
+  <title>Tarih Seç</title>
 </head>
-
 <body>
-  <div class="container">
-    <h1>Toplam Yayın Süresi</h1>
-    <label for="dateInput">Tarih (dd/mm/yyyy):</label>
-    <input type="text" id="dateInput" placeholder="31/12/2025" maxlength="10" />
-    <br />
-    <label for="timeInput">Saat (12 saat dlimi. 24 yapamadım):</label>
-    <input type="time" id="timeInput" />
-    <br />
-    <button id="startBtn">Başlat</button>
-    <div id="startTimeDisplay"></div>
-    <div id="timer">00:00:00</div>
-  </div>
-  <script src="script.js"></script>
+  <h2>Yayın Başlangıç Tarihi/Saati Seç</h2>
+  <input type="datetime-local" id="startTime">
+  <button onclick="saveStartTime()">Kaydet</button>
+
+  <script>
+    function saveStartTime() {
+      const val = document.getElementById("startTime").value;
+      if (!val) return alert("Tarih seçmelisin!");
+      localStorage.setItem("streamStart", new Date(val).toISOString());
+      alert("Başlangıç zamanı kaydedildi!");
+    }
+  </script>
 </body>
 </html>
