@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Yayın Süresi Sayaç</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+  <div class="container">
+    <h1>Yayın Süresi</h1>
+    <label for="dateInput">Tarih (dd/mm/yyyy):</label>
+    <input type="text" id="dateInput" placeholder="31/12/2025" maxlength="10" />
+    <br />
+    <label for="timeInput">Saat (12 saat dlimi. 24 yapamadım):</label>
+    <input type="time" id="timeInput" />
+    <br />
+    <button id="startBtn">Başlat</button>
+    <div id="startTimeDisplay"></div>
+    <div id="timer">00:00:00</div>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>
